@@ -1,11 +1,12 @@
 name: "CUPS Print Server"
-version: "1.0.0"
+version: "1.0.1"
 slug: "cups"
-description: "Vollwertiger CUPS-Druckserver mit AirPrint-Unterstützung und Netzwerkdruckererkennung"
+description: "CUPS Druckserver mit AirPrint-Unterstützung und Netzwerkdruckererkennung"
 url: "https://github.com/TillitschScHocK/Cupy4HA"
 codeowners:
   - TillitschScHocK
-documentation: "https://github.com/TillitschScHocK/Cupy4HA"
+documentation: "https://github.com/TillitschScHocK/Cupy4HA/tree/main/cups_addon"
+isue_tracker: "https://github.com/TillitschScHocK/Cupy4HA/issues"
 image: ghcr.io/tillitschschock/cups-print-server
 arch:
   - armhf
@@ -34,8 +35,6 @@ volumes:
 options:
   log_level: "info"
   enable_airprint: true
-  enable_samba: false
 schema:
   log_level: "list(debug|info|warning|error)?"
   enable_airprint: "bool?"
-  enable_samba: "bool?"
