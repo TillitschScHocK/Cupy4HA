@@ -2,9 +2,6 @@
 
 set -e
 
-# Virtualenv aktivieren
-source /opt/venv/bin/activate
-
 # Home Assistant Addon Config auslesen
 FRITZ_HOST=$(bashio::config 'fritz_host')
 FRITZ_PASS=$(bashio::config 'fritz_pass')
@@ -18,7 +15,7 @@ export FRITZ_USER
 export REFRESH_RATE
 
 bashio::log.info "========================================="
-bashio::log.info "Fritz!Box Mesh Overview v2.1"
+bashio::log.info "Fritz!Box Mesh Overview v2.0.2"
 bashio::log.info "========================================="
 bashio::log.info "Host: ${FRITZ_HOST}"
 bashio::log.info "Benutzer: ${FRITZ_USER}"
