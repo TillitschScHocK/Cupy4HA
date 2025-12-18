@@ -1,5 +1,5 @@
 name: "CUPS Print Server"
-version: "1.0.0"
+version: "1.0.1"
 slug: "cups"
 description: "Vollwertiger CUPS-Druckserver mit AirPrint-Unterstützung und Netzwerkdruckererkennung"
 url: "https://github.com/TillitschScHocK/Cupy4HA"

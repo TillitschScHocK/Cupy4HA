@@ -1,324 +1,185 @@
-# CUPS Print Server Addon für Home Assistant - Vollständige Installation
+# CUPS Print Server Setup Guide
 
-## Überblick
+## Quick Start
 
-Das neue **CUPS Addon** wurde vollständig in deinem Repository erstellt und ist sofort einsatzbereit. Dieses Dokument fasst die Implementierung zusammen.
+This guide will help you set up the CUPS Print Server addon for Home Assistant.
 
-## Was wurde erstellt?
+## Prerequisites
 
-### Verzeichnisstruktur
+- Home Assistant with Docker support
+- At least 300 MB RAM available
+- Ports 631/tcp, 631/udp available
+- Port 5353/udp for mDNS (optional but recommended)
+- Local network with mDNS support
 
+## Installation Steps
+
+### 1. Add Repository
+
+1. Open Home Assistant
+2. Go to **Settings** → **Add-ons & automations** → **Add-on store**
+3. Click the menu (three dots) in the top right
+4. Select **Repositories**
+5. Add this URL:
+   ```
+   https://github.com/TillitschScHocK/Cupy4HA
+   ```
+6. Click **Create**
+
+### 2. Install the Addon
+
+1. Search for "CUPS Print Server" in the Add-on store
+2. Click on the addon
+3. Click **Install**
+4. Wait for the installation to complete
+
+### 3. Start the Addon
+
+1. Click **Start**
+2. Check the logs for the message "CUPS Server is running"
+3. The addon should now be running
+
+### 4. Access the Web Interface
+
+Open your browser and navigate to:
 ```
-Cupy4HA/
-├── cups_addon/                  # CUPS Addon Verzeichnis
-│   ├── config.yaml               # Home Assistant Addon Konfiguration
-│   ├── Dockerfile                # Container Build Definition
-│   ├── run.sh                    # Startup-Skript mit D-Bus/Avahi/CUPS
-│   ├── cupsd.conf                # CUPS Server Konfiguration
-│   ├── build.yaml                # Multi-Arch Build Definition
-│   ├── requirements.txt          # Python Dependencies
-│   ├── .gitignore                # Git Ignore Rules
-│   ├── README.md                 # Benutzerhandbuch & FAQ
-│   ├─┠ CHANGELOG.md              # Release Notes & Historie
-│   ├─┠ INTEGRATION.md            # Integration Beispiele
-│   └─┠ TECHNICAL.md              # Technische Dokumentation
-└── [alte Dateien erhalten]
-```
-
-## Technische Anforderungen - Alle implementiert
-
-### 1. Netzwerk- und Druckererkennung
-
-✅ **Host Network Mode** (`host_network: true`)
-- Ermöglicht mDNS/Bonjour-Paketempfang
-- Erforderlich für Netzwerkdruckererkennung
-
-✅ **Avahi-Daemon** (installiert im Container)
-- mDNS Service Broadcasting
-- Automatische Netzwerkdruckererkennung
-- AirPrint-Unterstützung
-
-✅ **D-Bus Integration** (installiert im Container)
-- Inter-Process Communication
-- Druckerverwaltung und Kommunikation
-
-### 2. USB-Hardware-Durchreichung
-
-✅ **Privilegierter Container** (`privileged: true`)
-- Root-Zugriff für Hardware-Zugriff
-
-✅ **USB Device Mapping** (`/dev/bus/usb` gemappt)
-- Lokale USB-Drucker erkannt
-- Device Enumeration möglich
-
-✅ **usbutils installiert**
-- `lsusb` Debugging-Tool
-- Druckererkennung möglich
-
-### 3. Treiber-Unterstützung
-
-✅ **Debian-basiertes Base-Image** (`ghcr.io/hassio-addons/debian-base`)
-- Vollständige POSIX-Kompatibilität
-- Proprietäre Treiber unterstützt
-
-✅ **Alle gängigen Druckertreiber installiert**
-```dockerfile
-cups
-cups-client
-cups-filters
-foomatic-db-compressed-ppds      # 1000+ Druckermodelle
-printer-driver-all               # Universelle Treiber
-printer-driver-gutenprint        # Foto-Treiber
-openprinting-ppds                # OpenPrinting Datenbank
-hplip / hplip-data               # HP-spezifische Treiber
+http://[YOUR_HOMEASSISTANT_IP]:631
 ```
 
-### 4. Persistenz
+For example: `http://192.168.1.100:631`
 
-✅ **Persistente Konfiguration** (im `run.sh` Skript)
+## Adding Printers
+
+### USB Printers
+
+1. Connect the USB printer to your Home Assistant system
+2. Open the CUPS web interface
+3. Go to **Administration** → **Add Printer**
+4. The printer should appear in the list
+5. Select it and click **Continue**
+6. Choose the appropriate driver
+7. Click **Add Printer**
+
+### Network Printers
+
+1. Ensure the printer is on the same network
+2. Open the CUPS web interface
+3. Go to **Administration** → **Add Printer**
+4. The printer should be automatically discovered via mDNS
+5. If not, select "Other Network Printers"
+6. Enter the printer's IP address or hostname
+7. Choose the appropriate driver
+8. Click **Add Printer**
+
+### Manual Configuration
+
+1. Go to **Administration** → **Manage Printers**
+2. Click on your printer
+3. Configure print settings as needed
+4. Click **Set as Default Printer** if desired
+
+## Using AirPrint on iOS/macOS
+
+1. Open an app that supports printing (Safari, Mail, Photos, etc.)
+2. Tap the Share button or select Print
+3. Look for your CUPS server in the printer list
+4. Select it and configure print options
+5. Tap Print
+
+## Printing from Windows
+
+1. Open **Control Panel** → **Devices and Printers**
+2. Click **Add a printer**
+3. Select "Add a network, wireless or Bluetooth printer"
+4. Enter: `ipp://[YOUR_HOMEASSISTANT_IP]:631/`
+5. Follow the wizard
+
+## Printing from Linux
+
+### Using CUPS Client
+
 ```bash
-# Symlinks für Persistenz
-/etc/cups/ppd -> /data/cups/ppd
-/etc/cups/printers.conf -> /data/cups/printers.conf
-/etc/cups/classes.conf -> /data/cups/classes.conf
+lp -h [YOUR_HOMEASSISTANT_IP] -d [PRINTER_NAME] file.pdf
 ```
 
-Garantiert:
-- Druckerkonfiguration bleibt nach Neustart erhalten
-- PPD-Dateien bleiben erhalten
-- Klassendefintionen bleiben erhalten
+### Using `lpstat`
 
-### 5. Zugriffskonfiguration
-
-✅ **CUPS auf allen Interfaces** (cupsd.conf)
-```conf
-Listen 0.0.0.0:631       # HTTP/IPP
-Listen [::]:631          # IPv6
+```bash
+lpstat -h [YOUR_HOMEASSISTANT_IP] -p
 ```
 
-✅ **Keine Authentifizierung für lokales Netzwerk**
-```conf
-DefaultAuthType None     # Vereinfachter Zugriff
-```
+## Configuration Options
 
-✅ **Verwaltungszugriff aktiviert**
-```conf
-Allow all                # Für lokal vertrauenswürdiges Netzwerk
-```
+### Log Level
 
-## Dateien im Detail
+Choose the verbosity of logging:
+- `debug` - Very detailed logging
+- `info` - Standard logging (recommended)
+- `warning` - Only warnings and errors
+- `error` - Only errors
 
-### config.yaml
-Define Home Assistant Addon-Parameter:
-- **Architektur-Support**: armhf, armv7, aarch64, amd64, i386
-- **Host Network**: Aktiviert für mDNS
-- **Privilegiert**: Aktiviert für USB
-- **Ports**: 631/tcp (CUPS), 631/udp (Broadcasting), 5353/udp (mDNS)
-- **Optionen**: Log Level, AirPrint, Samba (future)
+### AirPrint Support
 
-### Dockerfile
-Container-Build mit:
-- Debian base image
-- CUPS + alle Driver packages
-- Avahi daemon
-- D-Bus system
-- USB utilities
-- Automatische Verzeichnis-Erstellung
+Enable or disable AirPrint support (enabled by default).
 
-### run.sh
-Startup-Skript mit:
-1. Persistenz-Setup (Symlinks, Verzeichnisse)
-2. D-Bus Daemon Start
-3. Avahi Daemon Start
-4. CUPS Daemon Start
-5. Service-Health Monitoring
-6. Farbige Ausgabe für Debugging
+### Samba/SMB Sharing
 
-### cupsd.conf
-CUPS Server Konfiguration:
-- Listening auf 0.0.0.0:631
-- Printer Sharing aktiviert
-- AirPrint-kompatible Einstellungen
-- Netzwerk-basierte Zugriffskontrolle
-- Encryption-Support
+Enable SMB/CIFS printer sharing (experimental, disabled by default).
 
-### Dokumentation
-- **README.md**: Kompletes Benutzerhandbuch
-- **TECHNICAL.md**: Architektur und Implementierung
-- **INTEGRATION.md**: Integration mit Home Assistant
-- **CHANGELOG.md**: Release Notes
+## Troubleshooting
 
-## Installation im Home Assistant
+### Addon Won't Start
 
-### Schritt 1: Repository hinzufügen
+1. Check the logs for error messages
+2. Ensure Host Network is enabled
+3. Verify port 631 is not used by another service
 
-```
-Home Assistant → Einstellungen → Add-ons
-Add-on Store (rechts oben) → Repositories
+### USB Printer Not Detected
 
-URL eingeben:
-https://github.com/TillitschScHocK/Cupy4HA
-```
+1. Check if the printer is physically connected
+2. Verify the addon has privileged access
+3. Check if `/dev/bus/usb` is properly mapped
+4. Restart the addon
 
-### Schritt 2: Addon installieren
+### Network Printer Not Found
 
-```
-Search: "CUPS Print Server"
-Klick: "Installieren"
+1. Ping the printer to verify network connectivity
+2. Check if Avahi daemon is running (see logs)
+3. Ensure the printer supports mDNS
+4. Try adding manually with the printer's IP address
 
-Warte auf: "Addon bereit zum Starten"
-```
+### Web Interface Not Responding
 
-### Schritt 3: Addon starten
+1. Check if the addon is running
+2. Verify port 631 is not blocked by firewall
+3. Try opening in a different browser
+4. Clear browser cache and cookies
+5. Restart the addon
 
-```
-Klick: "Starten"
+## Performance Tips
 
-Im Log schauen nach:
-"CUPS Server is running"
-```
+- Keep only necessary printers configured
+- Disable unused services (Samba if not needed)
+- Check logs regularly for errors
+- Restart the addon if it seems sluggish
 
-### Schritt 4: Web-Interface aufrufen
+## Security Considerations
 
-```
-http://[HOME_ASSISTANT_IP]:631
-```
+⚠️ **Important Security Notes:**
 
-## Funktionstüchtigkeit prüfen
-
-### Checklist
-
-- [ ] Addon läuft ohne Fehler
-- [ ] CUPS Web-Interface erreichbar (http://IP:631)
-- [ ] USB-Drucker werden erkannt (lsusb in Logs)
-- [ ] Netzwerkdrucker werden erkannt (Avahi Logs)
-- [ ] Drucker können hinzugefügt werden
-- [ ] Test-Druckauftrag funktioniert
-- [ ] Konfiguration bleibt nach Neustart erhalten
-
-### Debugging
-
-```
-Home Assistant → Add-ons → CUPS Print Server
-
-Logs anschauen auf:
-- "D-Bus started successfully"
-- "Avahi daemon started successfully"
-- "CUPS daemon started successfully"
-- "CUPS Server is running"
-```
-
-## Features (Sofort nutzbar)
-
-### Drucker-Management
-- Automatische Netzwerkdruckererkennung
-- USB-Drucker-Unterstützung
-- Hunderte vordefinierte Druckertreiber
-- Web-Interface für Konfiguration
-
-### AirPrint
-- Automatische Service-Registration
-- iOS/macOS Unterstützung
-- Transparente mDNS-Integration
-
-### Netzwerk
-- IPv4 und IPv6 Support
-- mDNS/Bonjour Broadcasting
-- Lokale Netzwerkfreigabe
-
-### Persistenz
-- Automatisches Backup in /data/cups/
-- Konfiguration bleibt nach Updates erhalten
-- Keine manuellen Backup nötig
-
-## Nächste Schritte
-
-### 1. Integration mit Home Assistant
-
-```yaml
-# Beispiel: Drucker Status auslesen
-shell_command:
-  get_printers: 'curl -s http://127.0.0.1:631/admin/printers'
-```
-
-### 2. Drucker hinzufügen
-
-1. Gehe zu http://IP:631
-2. "Drucker" → "Drucker hinzufügen"
-3. Wähle deinen Drucker
-4. Wähle passenden Treiber
-5. Klick: "Drucker hinzufügen"
-
-### 3. Netzwerkdrucker konfigurieren
-
-- IP-Adresse oder Hostname des Druckers eingeben
-- CUPS erkennt Typ automatisch
-- Passendem Treiber wählen
-- Fertig
-
-## Support & Troubleshooting
-
-### Problem: Addon startet nicht
-
-**Lösung**:
-1. Logs anschauen
-2. Host Network Mode ist aktiviert?
-3. Docker Volumes korrekt gemappt?
-4. Port 631 nicht durch anderes Addon belegt?
-
-### Problem: USB-Drucker nicht erkannt
-
-**Lösung**:
-1. `privileged: true` in config.yaml?
-2. `/dev/bus/usb` gemappt?
-3. `lsusb` in Logs zeigt Drucker?
-4. Addon neu starten
-
-### Problem: Netzwerkdrucker nicht erkannt
-
-**Lösung**:
-1. Drucker im Netzwerk erreichbar? (ping)
-2. Avahi Daemon läuft? (Logs)
-3. Host Network Mode aktiviert?
-4. mDNS im Netzwerk enabled?
-
-### Problem: CUPS Interface antwortet nicht
-
-**Lösung**:
-1. Port 631 ist gebunden? (netstat)
-2. Addon läuft noch? (Status prüfen)
-3. Firewall blockiert Port 631?
-4. Home Assistant neu starten
-
-## Sicherheit
-
-### Achtung
-
-- ⚠️ Host Network Mode: Addon läuft auf Host-Netzwerk
-- ⚠️ Privilegierter Container: Root-Zugriff auf Hardware
-- ⚠️ Offene Authentifizierung: DefaultAuthType None
-
-### Empfehlungen
-
-1. **Nur im lokalen Netzwerk verwenden**
-2. **Port 631 nicht nach außen exposen**
-3. **Nur vertrauenswürdigen Benutzern Zugriff gewähren**
-4. **Regulär Updates durchführen**
-
-## Lizenz
-
-MIT License - siehe LICENSE-Datei im Repository
+- The addon runs in host network mode (required for mDNS)
+- Runs with root privileges (required for USB access)
+- Only use in trusted local networks
+- Do not expose port 631 to the internet
+- Use a firewall to restrict access
 
 ## Support
 
-Für Fragen oder Probleme:
+For issues or questions, please create an issue on GitHub:
+https://github.com/TillitschScHocK/Cupy4HA/issues
 
-1. GitHub Issues: https://github.com/TillitschScHocK/Cupy4HA/issues
-2. Home Assistant Community: https://community.home-assistant.io/
-3. CUPS Documentation: https://www.cups.org/doc/
+## Additional Resources
 
----
-
-**Status**: ✅ Production Ready
-**Version**: 1.0.0
-**Last Updated**: 2025-01-01
+- [CUPS Official Documentation](https://www.cups.org/)
+- [Home Assistant Add-ons Documentation](https://developers.home-assistant.io/docs/add-ons)
+- [Avahi mDNS Documentation](https://avahi.org/)

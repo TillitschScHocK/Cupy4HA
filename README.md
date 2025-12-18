@@ -1,10 +1,10 @@
-# Cupy4HA - CUPS Print Server für Home Assistant
+# CUPS Print Server für Home Assistant
 
 [![Home Assistant Add-on Repository](https://img.shields.io/badge/home%20assistant-add%20on%20repository-41BDF5.svg)](https://github.com/TillitschScHocK/Cupy4HA)
 
 ## Überblick
 
-Cupy4HA ist ein vollwertiger CUPS-Druckserver für Home Assistant mit automatischer Netzwerkdruckererkennung, AirPrint-Unterstützung und umfassender USB-Drucker-Kompatibilität.
+Ein vollwertiger CUPS-Druckserver für Home Assistant mit automatischer Netzwerkdruckererkennung, AirPrint-Unterstützung und umfassender USB-Drucker-Kompatibilität.
 
 ## Funktionen
 
@@ -191,5 +191,5 @@ Bei Fragen oder Problemen bitte ein Issue auf GitHub erstellen:
 ---
 
 **Status:** Production Ready  
-**Version:** 1.0.0  
-**Last Updated:** 2025-01-01
+**Version:** 1.0.1  
+**Last Updated:** 2025-01-18
