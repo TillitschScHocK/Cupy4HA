@@ -1,0 +1,37 @@
+name: "CUPS Print Server"
+version: "1.0.0"
+slug: "cups"
+description: "Vollwertiger CUPS-Druckserver mit AirPrint-Unterstützung und Netzwerkdruckererkennung"
+url: "https://github.com/TillitschScHocK/Cupy4HA"
+arch:
+  - armhf
+  - armv7
+  - aarch64
+  - amd64
+  - i386
+init: false
+startup: application
+boot: auto
+host_network: true
+privileged: true
+devices:
+  - "/dev/bus/usb:/dev/bus/usb:rwm"
+ports:
+  631/tcp: 631
+  631/udp: 631
+  5353/udp: 5353
+ports_description:
+  631/tcp: "CUPS Web Interface & IPP"
+  631/udp: "CUPS Broadcasting"
+  5353/udp: "mDNS/Bonjour (Avahi)"
+volumes:
+  /data:
+    bind: default
+options:
+  log_level: "info"
+  enable_airprint: true
+  enable_samba: false
+schema:
+  log_level: "list(debug|info|warning|error)?"
+  enable_airprint: "bool?"
+  enable_samba: "bool?"
