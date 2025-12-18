@@ -3,6 +3,10 @@ version: "1.0.0"
 slug: "cups"
 description: "Vollwertiger CUPS-Druckserver mit AirPrint-Unterstützung und Netzwerkdruckererkennung"
 url: "https://github.com/TillitschScHocK/Cupy4HA"
+codeowners:
+  - TillitschScHocK
+documentation: "https://github.com/TillitschScHocK/Cupy4HA"
+image: ghcr.io/tillitschschock/cups-print-server
 arch:
   - armhf
   - armv7
