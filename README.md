@@ -1,152 +1,128 @@
-# Home Assistant CUPS Print Server Add-on
+# Cups4HA – CUPS Print Server Add-on for Home Assistant
 
-[![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)](https://github.com/arest/cups-addon)
-[![Supports aarch64 Architecture](https://img.shields.io/badge/aarch64-yes-green.svg)](https://github.com/arest/cups-addon)
-[![Supports amd64 Architecture](https://img.shields.io/badge/amd64-yes-green.svg)](https://github.com/arest/cups-addon)
-[![Supports armhf Architecture](https://img.shields.io/badge/armhf-yes-green.svg)](https://github.com/arest/cups-addon)
-[![Supports armv7 Architecture](https://img.shields.io/badge/armv7-yes-green.svg)](https://github.com/arest/cups-addon)
-[![Supports i386 Architecture](https://img.shields.io/badge/i386-yes-green.svg)](https://github.com/arest/cups-addon)
+[![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)](https://github.com/TillitschScHocK/Cups4HA)
+[![Supports aarch64 Architecture](https://img.shields.io/badge/aarch64-yes-green.svg)](https://github.com/TillitschScHocK/Cups4HA)
+[![Supports amd64 Architecture](https://img.shields.io/badge/amd64-yes-green.svg)](https://github.com/TillitschScHocK/Cups4HA)
+[![Supports armhf Architecture](https://img.shields.io/badge/armhf-yes-green.svg)](https://github.com/TillitschScHocK/Cups4HA)
+[![Supports armv7 Architecture](https://img.shields.io/badge/armv7-yes-green.svg)](https://github.com/TillitschScHocK/Cups4HA)
+[![Supports i386 Architecture](https://img.shields.io/badge/i386-yes-green.svg)](https://github.com/TillitschScHocK/Cups4HA)
 
-This Home Assistant add-on provides a CUPS (Common Unix Printing System) print server, allowing you to manage and share printers over your local network. It's designed for Home Assistant users who want to integrate network printing capabilities directly into their smart home setup.
+Cups4HA ist ein Home Assistant Add-on, das einen CUPS (Common Unix Printing System) Printserver bereitstellt, damit Drucker zentral im Smart Home verwaltet und im Netzwerk freigegeben werden können.
 
-## Features
+## Funktionen
 
-- **Network Printing**: Share printers across your local network using CUPS
-- **Web Interface**: Access the CUPS administration panel at `http://<your-ha-ip>:631` to add and manage printers
-- **Secure Administration**: Optional authentication for the CUPS admin interface
-- **Printer Support**: Compatible with a wide range of network and USB printers
-- **Lightweight**: Built on Alpine Linux for minimal resource usage
-- **Data Persistence**: Printer settings and configurations persist across restarts and updates
+- Netzwerkdruck mit CUPS für dein Home Assistant System
+- Weboberfläche unter `http://<ha-ip>:631` zur Druckerverwaltung
+- Optionale Authentifizierung für das Admin-Interface
+- Unterstützung für Netzwerk- und USB-Drucker
+- Schlanke Basis auf Alpine Linux
+- Persistente Speicherung der CUPS-Konfiguration unter `/data`
 
 ## Installation
 
-### From Home Assistant Add-on Store
+### Add-on Repository in Home Assistant einbinden
 
-1. Navigate to your Home Assistant instance.
-2. Go to **Settings** → **Add-ons** → **Add-on Store**.
-3. Click the 3-dot menu in the top right corner and select **Repositories**.
-4. Add `https://github.com/arest/cups-addon` as a repository.
-5. Find the "CUPS Print Server" add-on in the store and click it.
-6. Click **Install**.
-
-### Manual Installation
-
-If you prefer to manually install:
-
-1. Clone this repository to your local machine:
-   ```bash
-   git clone https://github.com/arest/cups-addon.git
+1. In Home Assistant zu **Einstellungen** → **Add-ons** → **Add-on Store** wechseln.
+2. Oben rechts auf das Drei-Punkte-Menü klicken und **Repositories** auswählen.
+3. Folgende URL hinzufügen:
    ```
-
-2. Copy the repository to your Home Assistant add-ons directory:
-   ```bash
-   scp -r cups-addon/cups root@<your-ha-ip>:/addons/
+   https://github.com/TillitschScHocK/Cups4HA
    ```
+4. Nach dem Hinzufügen nach **Cups4HA** im Add-on Store suchen und das Add-on installieren.
 
-3. In Home Assistant, go to **Settings** → **Add-ons** → **Add-on Store**.
-4. Click the 3-dot menu (top right) → **Repositories**.
-5. Add `/addons` as a repository URL and click **Add**.
-6. Refresh the add-on store to see "CUPS Print Server."
-7. Install the add-on.
+### Manuelle Installation (optional)
 
-## Configuration
+1. Repository klonen:
+   ```bash
+   git clone https://github.com/TillitschScHocK/Cups4HA.git
+   ```
+2. Den `cups` Ordner auf dein Home Assistant System kopieren, zum Beispiel:
+   ```bash
+   scp -r Cups4HA/cups root@<ha-ip>:/addons/
+   ```
+3. In Home Assistant unter **Einstellungen** → **Add-ons** → **Add-on Store** das Drei-Punkte-Menü öffnen und das lokale Verzeichnis als Repository hinzufügen (je nach Setup z. B. `/addons`).
+4. Danach sollte **Cups4HA** als Add-on im Store erscheinen und kann installiert werden.
 
-The add-on provides the following configuration options:
+## Konfiguration
+
+Beispielkonfiguration des Add-ons in Home Assistant:
 
 ```yaml
 admin_username: printadmin
-admin_password: your_secure_password
+admin_password: dein_sicheres_passwort
 ```
 
-- **admin_username**: Username for the CUPS admin interface (default: printadmin)
-- **admin_password**: Password for the CUPS admin interface
+- **admin_username**: Benutzername für das CUPS Admin-Interface
+- **admin_password**: Passwort für das CUPS Admin-Interface
 
-After configuring:
+Nach dem Speichern der Konfiguration:
 
-1. Start the add-on from the Info tab.
-2. Check the Log tab to ensure it starts successfully.
-3. Access the CUPS web interface at `http://<your-ha-ip>:631`.
+1. Add-on auf der Infoseite starten.
+2. Im **Log** prüfen, ob der Container fehlerfrei läuft.
+3. Die CUPS Weboberfläche unter `http://<ha-ip>:631` aufrufen.
 
-## Usage
+## Nutzung
 
-### Access the Web Interface
+### Zugriff auf die Weboberfläche
 
-Visit `http://<your-ha-ip>:631` in your browser.
+- Browser öffnen und `http://<ha-ip>:631` aufrufen.
+- Mit den konfigurierten Zugangsdaten am CUPS Admin-Interface anmelden (falls aktiviert).
 
-### Add a Printer
+### Drucker hinzufügen
 
-1. Go to the **Administration** tab.
-2. Click **Add Printer** and follow the prompts.
-3. Select the appropriate driver for your printer model.
+1. In CUPS auf **Administration** gehen.
+2. **Add Printer** auswählen und den Anweisungen folgen.
+3. Den passenden Treiber für dein Druckermodell wählen.
 
-### Print from Devices
+### Vom Client drucken
 
-Configure your computers or devices to use the printer at `<your-ha-ip>:631`.
+- Auf PCs, Laptops oder anderen Geräten den Drucker mit der URL deines Home Assistant Systems (`ipp://<ha-ip>/printers/<druckername>` bzw. `http://<ha-ip>:631`) einrichten.
 
-## Supported Printer Types
+## Unterstützte Druckertypen
 
-This add-on supports various printer types:
+- Netzwerkdrucker (z. B. IPP, LPD)
+- USB-Drucker am Home Assistant Host
+- Freigegebene Windows-Drucker (Samba)
+- AirPrint-fähige Geräte
 
-- Network printers (via IPP, LPD, etc.)
-- USB printers connected to your Home Assistant host
-- Shared Windows printers (via Samba)
-- AirPrint for Apple devices
+## Fehlerbehebung
 
-## Troubleshooting
+### Weboberfläche nicht erreichbar
 
-### Can't Access Web Interface
+- Prüfen, ob das Add-on läuft und keine Fehler im Log angezeigt werden.
+- Sicherstellen, dass Port 631 im Netzwerk nicht blockiert wird.
+- Netzwerk- und Firewallregeln des Home Assistant Hosts prüfen.
 
-- Ensure the add-on is running (check logs).
-- Verify port 631 isn't blocked by your firewall.
-- Check that your network allows access to the Home Assistant device.
+### Drucker wird nicht erkannt
 
-### Printer Not Detected
+- Prüfen, ob der Drucker eingeschaltet und im Netzwerk erreichbar ist.
+- Bei USB-Druckern kontrollieren, ob das Gerät korrekt an den Host angebunden ist und ggf. USB-Passthrough für den Container konfiguriert werden muss.
+- CUPS-Logs im Add-on Logfenster prüfen.
 
-- Ensure the printer is network-accessible or connected via USB to the host.
-- For USB printers, you may need to configure USB device pass-through to the add-on.
-- Check CUPS logs in the add-on's Log tab.
+### Probleme mit Treibern
 
+- Für viele Modelle finden sich PPDs und Treiber unter:
+  - https://www.openprinting.org/download/PPD/
+  - https://www.openprinting.org/drivers/
 
-### Printer Drivers
-   https://www.openprinting.org/download/PPD/
-   https://www.openprinting.org/drivers/
+### Authentifizierungsprobleme
 
-### Authentication Issues
+- Benutzername und Passwort mit der Add-on Konfiguration abgleichen.
+- Bei vergessenem Passwort die Add-on Konfiguration anpassen und das Add-on neu starten.
 
-- Verify you're using the correct username and password configured in the add-on settings.
-- If you've forgotten your password, you can reset it by reconfiguring the add-on.
+## Datenpersistenz
 
-## Contributing
+Cups4HA speichert alle relevanten CUPS-Daten im Home Assistant `/data` Verzeichnis, insbesondere:
 
-Contributions are welcome! Please:
+- `/data/cups/config` für Konfigurationsdateien
+- `/data/cups/cache` für Cache-Daten
+- `/data/cups/logs` für Logfiles
+- `/data/cups/state` für Statusinformationen
 
-1. Fork this repository.
-2. Create a feature branch (`git checkout -b feature/your-feature`).
-3. Commit your changes (`git commit -m "Add your feature"`).
-4. Push to the branch (`git push origin feature/your-feature`).
-5. Open a pull request.
+Damit bleiben Drucker, Einstellungen und Logs über Neustarts, Systemreboots und Add-on Updates hinweg erhalten und sind in Home Assistant Backups enthalten.
 
-## License
+## Lizenz und Credits
 
-This project is licensed under the MIT License.
-
-## Credits
-
-- Built by [Andrea Restello](https://github.com/arest)
-- Powered by [Home Assistant](https://www.home-assistant.io/) and [CUPS](https://www.cups.org/)
-
-## Data Persistence
-
-This add-on stores all CUPS data in the Home Assistant `/data` directory, ensuring:
-
-- Printer configurations persist across add-on restarts
-- Print jobs and settings are maintained through system reboots
-- Add-on updates won't cause loss of printer configurations
-- All CUPS data is included in Home Assistant backups
-
-The following directories are maintained in the persistent storage:
-- `/data/cups/config`: CUPS configuration files
-- `/data/cups/cache`: CUPS cache data
-- `/data/cups/logs`: CUPS log files
-- `/data/cups/state`: CUPS state information
-
+- Ursprünglich basierend auf der Arbeit von [Andrea Restello](https://github.com/arest) und dessen CUPS Add-on.
+- Cups4HA wird von **TillitschScHocK** gepflegt: https://github.com/TillitschScHocK
+- Lizenz: MIT License (siehe `LICENSE`).
