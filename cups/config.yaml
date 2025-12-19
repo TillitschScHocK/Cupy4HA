@@ -1,10 +1,10 @@
 ---
 version: 1.0.0
-slug: cups
-name: CUPS Print Server
-description: CUPS print server for network printing
-url: https://github.com/arest/cups-addon
-codenotary: andrea_restello@yahoo.it
+slug: cups4ha
+name: Cups4HA
+description: CUPS Print Server for Home Assistant - Network printing made easy
+url: https://github.com/TillitschScHocK/Cups4HA
+codenotary: TillitschScHocK <94850668+TillitschScHocK@users.noreply.github.com>
 arch:
   - armhf
   - armv7
@@ -20,7 +20,7 @@ init: false
 ports:
   631/tcp: 631
 ports_description:
-  631/tcp: CUPS web interface and printing port
+  631/tcp: CUPS web interface and printing port (IPP/HTTP)
 options:
   admin_username: "admin"
   admin_password: "admin"
