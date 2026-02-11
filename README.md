@@ -1,3 +1,8 @@
+> [!WARNING]
+> **This repository has been archived and is now read-only.**  
+> No further updates or pull requests will be accepted.
+
+
 # 🖨️ Cups4HA – CUPS Print Server Add-on for Home Assistant
 
 <div align="center">
